@@ -21,9 +21,17 @@ export const register = async (values:z.infer<typeof RegisterSchema>)=>{
     const existingUser = await getUserByEmail(email)
     if (existingUser ){
         if ( !existingUser.password){
-            const updatedUser = existingUser
-            updatedUser.password = hashPassword
+            await db.user.update({
+                where: { id: existingUser.id },
+                data: {
+                    password: existingUser.password
+                }
+            })
             
+            const verficationToken = await generateVerificationToken(email)
+            await sendVerificationEmail(verficationToken.email, verficationToken.token);
+
+            return { success: "Confirmation Email sent" }
         }
         return { error: "Email already exist"}
     }
