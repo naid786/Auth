@@ -1,0 +1,24 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "localwebstore",
+            "database": "postgres",
+            "username": "myuser",
+            "password": "mypassword"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "loacdb",
+            "database": "prisma",
+            "username": "myuser",
+            "password": "mypassword"
+        }
+    ]
+}
