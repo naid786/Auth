@@ -30,6 +30,27 @@ const transporter = nodemailer.createTransport({
  * @param options - Email options
  * @returns Promise indicating success
  */
+
+export const sendPasswordResetEmail = async (email: string, token: string) => {
+  try {
+
+    const resetLink = `http://localhost:3000/auth/new-password?token=${token}`
+    const mailOptions = {
+      from: `"WebStore" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Reset your password",
+      html: `<p>Click <a href="${resetLink}">here</a> to reset password.</p>`
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully to', email);
+    return true;
+  } catch (error) {
+    console.error('Error sending email to', email, error);
+    throw error; // Or return false if you prefer to handle errors silently
+  }
+};
+
 export const sendVerificationEmail = async (email:string,token:string) => {
     try {
 
