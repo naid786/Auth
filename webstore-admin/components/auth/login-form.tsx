@@ -57,7 +57,12 @@ export const LoginForm = () => {
                 if (data?.twoFactor) {
                     setShowTwoFactor(true)
                 }
-            }).catch(() => setError("Something went wrong"));
+            }).catch((error) => {
+                // Only log non-redirect errors
+                if (error.message !== 'NEXT_REDIRECT') {
+                    setError("Something went wrong");
+                }
+            });
         });
     }
 
