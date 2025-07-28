@@ -3,7 +3,8 @@ import { JWT } from "next-auth/jwt";
 import {UserRole} from "@prisma/client"
 
 export type ExtendedUser = DefaultSession['user'] &{
-    role: UserRole
+    role: UserRole;
+    isTwoFactorEnabled :Boolean;
 }
 declare module "next-auth" {
     /**
@@ -18,6 +19,6 @@ declare module "next-auth/jwt" {
     /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
     interface JWT {
         /** OpenID ID Token */
-        role?: UserRole
+        role?: UserRole;
     }
 }
