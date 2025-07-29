@@ -24,7 +24,7 @@ export const register = async (values:z.infer<typeof RegisterSchema>)=>{
             await db.user.update({
                 where: { id: existingUser.id },
                 data: {
-                    password: existingUser.password
+                    password: hashPassword
                 }
             })
             
