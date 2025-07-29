@@ -1,7 +1,15 @@
 "use client";
 
-import { settings } from "@/actions/settings";
 import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { settings } from "@/actions/settings";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
 import { useTransition, useState } from "react";
@@ -18,7 +26,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { UserRole } from "@prisma/client";
 import { Switch } from "@/components/ui/switch";
 
-const SettingsPage = () => {
+export const SettingsModal = ({ children }: { children: React.ReactNode }) => {
+    const [open, setOpen] = useState(false);
     const user = useCurrentUser();
 
     const [isPending, startTransition] = useTransition();
@@ -32,9 +41,9 @@ const SettingsPage = () => {
         defaultValues: {
             name: user?.name || undefined,
             password: undefined,
-            newPassword:undefined,
+            newPassword: undefined,
             email: user?.email || undefined,
-            role:user?.role || undefined
+            role: user?.role || undefined
         }
     })
 
@@ -58,13 +67,39 @@ const SettingsPage = () => {
 
     }
     return (
-        <Card className="w-[600px]">
-            <CardHeader>
-                <p className="text-2xl font-semibold text-center">
-                    Settings
-                </p>
-            </CardHeader>
-            <CardContent>
+        <Dialog open={open} onOpenChange={(isOpen) => {
+            if (!isOpen) {
+                // Only allow closing when explicitly requested
+                setOpen(false);
+            }
+        }}>
+            <DialogTrigger asChild>
+                <span className="cursor-pointer"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setOpen(true);
+                    }}
+                >
+                    {children}
+                </span>
+            </DialogTrigger>
+            <DialogContent
+                className="sm:max-w-md"
+                onInteractOutside={(e) => {
+                    e.preventDefault(); // Prevent closing on outside clicks
+                }}
+                onEscapeKeyDown={(e) => {
+                    e.preventDefault(); // Prevent closing on ESC key
+                }}
+            >
+
+                <DialogHeader>
+                    <DialogTitle>
+                        Settings
+                    </DialogTitle>
+                </DialogHeader>
+
+                {/* <CardContent> */}
                 <Form {...form}>
                     <form className="space-y-4"
                         onSubmit={form.handleSubmit(onSubmit)}
@@ -82,11 +117,11 @@ const SettingsPage = () => {
                                             />
 
                                         </FormControl>
-                                        <FormMessage/>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            
+
                             <FormField
                                 control={form.control}
                                 name="email"
@@ -95,7 +130,7 @@ const SettingsPage = () => {
                                         <FormLabel>Email</FormLabel>
                                         <FormControl>
                                             <Input {...field} placeholder="test@example.com" type="email"
-                                                disabled={isPending || user?.isOAuth }
+                                                disabled={isPending || user?.isOAuth}
                                             />
 
                                         </FormControl>
@@ -141,10 +176,10 @@ const SettingsPage = () => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Role</FormLabel>
-                                        <Select 
-                                        disabled={isPending}
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
+                                        <Select
+                                            disabled={isPending}
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
@@ -174,15 +209,15 @@ const SettingsPage = () => {
                                         </div>
                                         <FormControl>
                                             <Switch
-                                            disabled={isPending}
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
+                                                disabled={isPending}
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
                                             />
 
-                                            
+
                                         </FormControl>
-                                        
-                                        
+
+
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -190,15 +225,34 @@ const SettingsPage = () => {
                         </div>
                         <FormError message={error} />
                         <FormSuccess message={success} />
-                        <Button type="submit">
-                            Save
-                        </Button>
+                        <div className="flex flex-row justify-between">
+                            <Button
+                                type="submit"
+                                disabled={isPending}
+                            >
+                                {isPending ? "Saving..." : "Save"}
+                            </Button>
+
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => {
+                                    setOpen(false);
+                                    form.reset();
+                                    setError(undefined);
+                                    setSuccess(undefined);
+                                }}
+                            >
+                                Close
+                            </Button>
+                        </div>
                     </form>
                 </Form>
-            </CardContent>
+                {/* </CardContent> */}
 
-        </Card>
+                {/* </Card> */}
+
+            </DialogContent>
+        </Dialog>
     );
-}
-
-export default SettingsPage;
+};
