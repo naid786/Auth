@@ -1,6 +1,6 @@
 # Admin Auth
 
-This project is a **Next.js 15** authentication and admin panel for a web store. It provides secure user authentication, registration, password reset, two-factor authentication (2FA), and role-based access control using **NextAuth.js**, **Prisma**, and **PostgreSQL**. The UI is built with Tailwind CSS and Radix UI.
+This project is a **Next.js 15** authentication and admin panel for a . It provides secure user authentication, registration, password reset, two-factor authentication (2FA), and role-based access control using **NextAuth.js**, **Prisma**, and **PostgreSQL**. The UI is built with Tailwind CSS and Radix UI.
 
 ## Features
 
